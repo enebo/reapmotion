@@ -18,11 +18,8 @@ class SampleListener < Listener
 
   def onConnect(controller)
     puts "Connected"
-    
-    controller.enable_gesture(Gesture::Type::TYPE_SWIPE)
-    controller.enable_gesture(Gesture::Type::TYPE_CIRCLE)
-    controller.enable_gesture(Gesture::Type::TYPE_SCREEN_TAP)
-    controller.enable_gesture(Gesture::Type::TYPE_KEY_TAP)
+
+    controller.enable_gestures(:swipe, :circle, :screen_tap, :key_tap)
   end
 
   def onDisconnect(controller) # Not called if run through debugger
