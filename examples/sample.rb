@@ -63,13 +63,7 @@ class SampleListener < Listener
       frame.gestures do |gesture|
         case gesture.type
         when Gesture::Type::TYPE_CIRCLE then
-          # Calculate clock direction using the angle between gesture normal and pointable
-          if gesture.pointable.direction.angleTo(gesture.normal) <= JMath::PI/4
-            # Clockwise if angle is less than 90 degrees
-            clockwiseness = "clockwise"
-          else
-            clockwiseness = "counterclockwise"
-          end
+          clockwiseness = gesture.clockwise? ? "clockwise" : "counterclockwise"
 
           # Calculate angle swept since last frame
           sweptAngle = 0.0

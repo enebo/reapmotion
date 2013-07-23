@@ -1,3 +1,4 @@
+require 'reapmotion/core_ext/circle_gesture'
 require 'reapmotion/core_ext/controller'
 require 'reapmotion/core_ext/device_list'
 require 'reapmotion/core_ext/finger_list'
