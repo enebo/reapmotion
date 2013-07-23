@@ -1,12 +1,9 @@
 require 'reapmotion'
 
-java_import com.leapmotion.leap.CircleGesture
 java_import com.leapmotion.leap.Controller
 java_import com.leapmotion.leap.Listener
+java_import com.leapmotion.leap.CircleGesture
 java_import com.leapmotion.leap.Gesture
-java_import com.leapmotion.leap.KeyTapGesture
-java_import com.leapmotion.leap.ScreenTapGesture
-java_import com.leapmotion.leap.SwipeGesture
 java_import com.leapmotion.leap.Vector
 
 JMath = java.lang.Math
@@ -69,7 +66,7 @@ class SampleListener < Listener
           sweptAngle = 0.0
           if gesture.state != Gesture::State::STATE_START
             previousUpdate = CircleGesture.new controller.frame(1).gesture(gesture.id)
-            sweptAngle = (gesture.progress - previousUpdate.progress) * 2 * JMath::PI
+            sweptAngle = (gesture.progress - previousUpdate.progress) * 2 * Math::PI
           end
 
           puts "Gesture id: #{gesture.id}, #{gesture.state}, progress: #{gesture.progress}, radius: #{gesture.radius}, angle: #{JMath.toDegrees(sweptAngle)}, #{clockwiseness}"
