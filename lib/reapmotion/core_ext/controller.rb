@@ -17,4 +17,12 @@ class com::leapmotion::leap::Controller
       enable_gesture(type)
     end
   end
+
+  def self.run(*listeners)
+    controller = Controller.new
+    listeners.each { |listener| controller.add_listener listener }
+    yield
+  ensure
+    listeners.each { |listener| controller.remove_listener listener }
+  end
 end

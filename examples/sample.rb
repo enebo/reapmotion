@@ -88,15 +88,8 @@ class SampleListener < Listener
 end
 
 # Create a sample listener and controller
-listener = SampleListener.new
-controller = Controller.new
-
-# Have the sample listener receive events from the controller
-controller.addListener listener
-
-# Keep this process running until Enter is pressed
-puts "Press Enter to quit..."
-gets
-# Remove the sample listener when done
-controller.removeListener listener
+Controller.run(SampleListener.new) do
+  puts "Press Enter to quit..."
+  gets
+end
 
