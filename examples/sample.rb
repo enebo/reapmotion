@@ -60,13 +60,11 @@ class SampleListener < Listener
       # Calculate the hand's pitch, roll, and yaw angles
       puts "Hand pitch: #{JMath.toDegrees(direction.pitch)} degrees, roll: #{JMath.toDegrees(normal.roll)} degrees, yaw: #{JMath.toDegrees(direction.yaw)} degrees"
 
-      frame.gestures.each do |gesture|
+      frame.gestures do |gesture|
         case gesture.type
         when Gesture::Type::TYPE_CIRCLE then
-          circle = CircleGesture.new gesture
-          
-          # Calculate clock direction using the angle between circle normal and pointable
-          if circle.pointable.direction.angleTo(circle.normal) <= JMath::PI/4
+          # Calculate clock direction using the angle between gesture normal and pointable
+          if gesture.pointable.direction.angleTo(gesture.normal) <= JMath::PI/4
             # Clockwise if angle is less than 90 degrees
             clockwiseness = "clockwise"
           else
@@ -75,21 +73,18 @@ class SampleListener < Listener
 
           # Calculate angle swept since last frame
           sweptAngle = 0.0
-          if circle.state != Gesture::State::STATE_START
-            previousUpdate = CircleGesture.new controller.frame(1).gesture(circle.id)
-            sweptAngle = (circle.progress - previousUpdate.progress) * 2 * JMath::PI
+          if gesture.state != Gesture::State::STATE_START
+            previousUpdate = CircleGesture.new controller.frame(1).gesture(gesture.id)
+            sweptAngle = (gesture.progress - previousUpdate.progress) * 2 * JMath::PI
           end
 
-          puts "Circle id: #{circle.id}, #{circle.state}, progress: #{circle.progress}, radius: #{circle.radius}, angle: #{JMath.toDegrees(sweptAngle)}, #{clockwiseness}"
+          puts "Gesture id: #{gesture.id}, #{gesture.state}, progress: #{gesture.progress}, radius: #{gesture.radius}, angle: #{JMath.toDegrees(sweptAngle)}, #{clockwiseness}"
         when Gesture::Type::TYPE_SWIPE then
-          swipe = SwipeGesture.new gesture
-          puts "Swipe id: #{swipe.id}, #{swipe.state}, position: #{swipe.position}, direction: #{swipe.direction}, speed: #{swipe.speed}"
+          puts "Gesture id: #{gesture.id}, #{gesture.state}, position: #{gesture.position}, direction: #{gesture.direction}, speed: #{gesture.speed}"
         when Gesture::Type::TYPE_SCREEN_TAP then
-          screenTap = ScreenTapGesture.new gesture
-          puts "Screen Tap id: #{screenTap.id}, #{screenTap.state}, position: #{screenTap.position}, direction: #{screenTap.direction}"
+          puts "Screen Tap id: #{gesture.id}, #{gesture.state}, position: #{gesture.position}, direction: #{gesture.direction}"
         when Gesture::Type::TYPE_KEY_TAP then
-          keyTap = KeyTapGesture.new gesture
-          puts "Key Tap id: #{keyTap.id}, #{keyTap.state}, position: #{keyTap.position}, direction: #{keyTap.direction}"
+          puts "Key Tap id: #{gesture.id}, #{gesture.state}, position: #{gesture.position}, direction: #{gesture.direction}"
         else
           puts "Unknown gesture type."
         end
