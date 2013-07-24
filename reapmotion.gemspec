@@ -7,6 +7,7 @@ files = `git ls-files -- lib/* spec/* sample/*`.split("\n")
 Gem::Specification.new do |s|
   s.name        = 'reapmotion'
   s.version     = ReapMotion::VERSION
+  s.license     = 'Apache License, Version 2.0'
   s.platform    = Gem::Platform::RUBY
   s.authors     = 'Thomas E. Enebo'
   s.email       = 'tom.enebo@gmail.com'
