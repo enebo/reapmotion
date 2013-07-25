@@ -19,7 +19,7 @@ class SphereFinger < JRubyFX::Application
   
   def start(stage)
     listener = SimpleLeapListener.new
-    listener.point_property.add_change_listener do |ov, t, t1|
+    listener.point_property.add_change_listener do |t1|
       run_later do
         scene = stage.scene
         window = scene.window
@@ -50,35 +50,28 @@ class SimpleLeapListener < Listener
   java_import(java.lang.Math) { |p, n| "J" + n }
   java_import javafx.geometry.Point2D
   include JRubyFX::DSL
-  property_accessor :point, :key_tap
+  property_accessor :point
 
   def initialize()
     super()
-    @position_average = LimitQueue.new(10)
-    @point = simple_object_property
-    @key_tap = simple_object_property
+    @position_average, @point = LimitQueue.new(10), simple_object_property
   end
 
   def onFrame(controller)
     frame = controller.frame
-    if !frame.hands.empty?
-      screen = controller.calibrated_screens.get(0)
-      if screen && screen.valid?
-        hand = frame.hands[0]
-        if hand.valid?
-          intersect = screen.intersect(hand.palm_position, hand.direction, true)
-          @position_average << intersect
-          a_x, a_y = average(@position_average)
-          new_point = Point2D.new(screen.width_pixels * JMath.min(1, JMath.max(0,a_x)),
-                                  screen.height_pixels * JMath.min(1,JMath.max(0,(1-a_y))))
-          @point.set_value(new_point)
-        end
-      end
-    end
-    @key_tap.set false
-    frame.gestures do |gesture|
-      @key_tap.set(true) if gesture.type == Gesture.Type.TYPE_KEY_TAP
-    end
+    return if frame.hands.empty?
+
+    screen = controller.located_screens[0]
+    return if !screen || !screen.valid?
+
+    hand = frame.hands[0]
+    retun unless hand.valid?
+
+    intersect = screen.intersect(hand.palm_position, hand.direction, true)
+    @position_average << intersect
+    a_x, a_y = average(@position_average)
+    self.point = Point2D.new(screen.width_pixels * JMath.min(1, JMath.max(0,a_x)),
+                             screen.height_pixels * JMath.min(1,JMath.max(0,(1-a_y))))
   end
      
   def average(vectors)
